@@ -1,4 +1,5 @@
 package WebService::Async::SmartyStreets;
+# ABSTRACT: Access SmartyStreet API 
 
 use strict;
 use warnings;
