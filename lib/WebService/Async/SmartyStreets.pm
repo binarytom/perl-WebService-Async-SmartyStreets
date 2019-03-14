@@ -3,6 +3,8 @@ package WebService::Async::SmartyStreets;
 use strict;
 use warnings;
 
+our $VERSION = '1.001';
+
 use parent qw(IO::Async::Notifier);
 
 use mro;

@@ -31,6 +31,7 @@ my %status_level = (
     ambiguous => 2,
     verified => 3
 );
+
 sub status_at_least {
     my ($self, $target) = @_;
     my $target_level = $status_level{$target} // die 'unknown target status ' . $target;
