@@ -13,5 +13,5 @@ on test => sub {
     requires 'Test::More';
     requires 'Test::Warn';
     requires 'Test::FailWarnings';
-    requires 'Test::Exception';
+    requires 'Test::Fatal';
 };

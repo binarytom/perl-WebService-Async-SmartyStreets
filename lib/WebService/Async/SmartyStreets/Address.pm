@@ -21,9 +21,9 @@ sub geocode_precision { shift->{metadata}{geocode_precision} }
 sub max_geocode_precision { shift->{metadata}{max_geocode_precision} }
 sub address_format { shift->{metadata}{address_format} }
 
-sub status { lc shift->{analysis}{verification_status} }
-sub address_precision { lc shift->{analysis}{address_precision} }
-sub max_address_precision { lc shift->{analysis}{max_address_precision} }
+sub status { lc shift->{analysis}{verification_status} // ''}
+sub address_precision { lc shift->{analysis}{address_precision} // ''}
+sub max_address_precision { lc shift->{analysis}{max_address_precision} // ''}
 
 my %status_level = (
     none => 0,
