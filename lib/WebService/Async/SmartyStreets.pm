@@ -6,6 +6,14 @@ use warnings;
 
 our $VERSION = '1.001';
 
+=pod
+
+WebService::Async::SmartyStreets
+
+This module calls the SmartyStreets API and checks for the validity of the address
+
+=cut
+
 use parent qw(IO::Async::Notifier);
 
 use mro;
@@ -22,6 +30,15 @@ use WebService::Async::SmartyStreets::Address;
 
 use Log::Any qw($log);
 
+=pod
+
+WebService::Async::SmartyStreets::Address
+
+This is a object that contains the response from SmartyStreets API 
+
+=cut
+
+
 sub configure {
     my ($self, %args) = @_;
     for my $k (qw(auth_id token)) {
@@ -36,6 +53,14 @@ sub token   { shift->{token} }
 sub next_id {
     ++(shift->{id} //= 'AA00000000');
 }
+
+=pod
+
+ua
+
+User agent that makes the connection to the SmartyStreets API
+
+=cut
 
 sub ua {
     my ($self) = @_;
@@ -52,6 +77,14 @@ sub ua {
         $ua;
         }
 }
+
+=pod
+
+verify_international, verify_usa
+
+calls to different API depending on the country of the address
+
+=cut
 
 async sub verify_international {
     my ($self, %args) = @_;
