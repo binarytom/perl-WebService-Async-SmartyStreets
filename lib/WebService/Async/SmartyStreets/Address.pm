@@ -3,6 +3,14 @@ package WebService::Async::SmartyStreets::Address;
 use strict;
 use warnings;
 
+=pod
+
+WebService::Async::SmartyStreets::Address
+
+This is a object that contains the response from SmartyStreets API 
+
+=cut
+
 sub new {
     my ($class, %args) = @_;
     bless \%args, $class
@@ -12,6 +20,12 @@ sub address_parts {
     my ($self) = @_;
     @{$self}{grep { exists $self->{$_} } map { 'address' . $_ } 1..12 }
 }
+
+=pod
+
+Various subroutine that parses and returns the field from the caller
+
+=cut
 
 sub input_id { shift->{input_id} }
 sub organization { shift->{organization} }
@@ -25,12 +39,23 @@ sub status { lc shift->{analysis}{verification_status} // ''}
 sub address_precision { lc shift->{analysis}{address_precision} // ''}
 sub max_address_precision { lc shift->{analysis}{max_address_precision} // ''}
 
+# Maps each verification response into a score
 my %status_level = (
     none => 0,
     partial => 1,
     ambiguous => 2,
     verified => 3
 );
+
+=pod
+
+status_at_least
+
+Checks if the returned response at least hits a certain level (in terms of score)
+
+return type: 1 or 0
+
+=cut
 
 sub status_at_least {
     my ($self, $target) = @_;
@@ -47,6 +72,17 @@ my %accuracy_level = (
     premise => 4,
     delivery_point => 5,
 );
+
+=pod
+
+accuracy_at_least
+
+Similar with status at least, checks if the returned response at least hits a certain accuracy (in terms of score)
+Instantly returns 0 if the status is lower than 'partial'
+
+return type: 1 or 0
+
+=cut
 
 sub accuracy_at_least {
     my ($self, $target) = @_;
