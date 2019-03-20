@@ -1,5 +1,5 @@
 package WebService::Async::SmartyStreets;
-# ABSTRACT: Access SmartyStreet API 
+# ABSTRACT: Access SmartyStreet API
 
 use strict;
 use warnings;
@@ -31,10 +31,10 @@ sub configure {
 }
 
 sub auth_id { shift->{auth_id} }
-sub token { shift->{token} }
+sub token   { shift->{token} }
 
 sub next_id {
-    ++(shift->{id} //= 'AA00000000')
+    ++(shift->{id} //= 'AA00000000');
 }
 
 sub ua {
@@ -42,26 +42,26 @@ sub ua {
     $self->{ua} //= do {
         $self->add_child(
             my $ua = Net::Async::HTTP->new(
-                fail_on_error => 1,
-                decode_content => 1,
-                pipeline => 0,
+                fail_on_error            => 1,
+                decode_content           => 1,
+                pipeline                 => 0,
                 max_connections_per_host => 4,
-                user_agent => 'Mozilla/4.0 (WebService::Async::SmartyStreets; TEAM@cpan.org; https://metacpan.org/pod/WebService::Async::SmartyStreets)',
-            )
-        );
-        $ua
-    }
+                user_agent =>
+                    'Mozilla/4.0 (WebService::Async::SmartyStreets; TEAM@cpan.org; https://metacpan.org/pod/WebService::Async::SmartyStreets)',
+            ));
+        $ua;
+        }
 }
 
 async sub verify_international {
     my ($self, %args) = @_;
     my $uri = URI->new('https://international-street.api.smartystreets.com/verify');
-    return await $self->verify($uri => %args)
+    return await $self->verify($uri => %args);
 }
 async sub verify_usa {
     my ($self, %args) = @_;
     my $uri = URI->new('https://us-street.api.smartystreets.com/street-address');
-    return await $self->verify($uri => %args)
+    return await $self->verify($uri => %args);
 }
 
 async sub verify {
@@ -77,19 +77,19 @@ async sub verify {
         'input-id' => $self->next_id,
     );
     $log->tracef('GET %s', '' . $uri);
-    my $decoded = do {
-        my $res = await $self->ua->GET(
-            $uri
-        );
-        decode_json_utf8($res->decoded_content);
-    };
+    my $decoded = await get_decoded_data($self, $uri);
     $log->tracef('=> %s', $decoded);
-    return map {
-        WebService::Async::SmartyStreets::Address->new(
-            %$_
-        )
-    } @$decoded;
+    return map { WebService::Async::SmartyStreets::Address->new(%$_) } @$decoded;
 }
 
+async sub get_decoded_data {
+    my $self = shift;
+    my $uri = shift;
+    my $response = do {
+        my $res = await $self->ua->GET($uri);
+        decode_json_utf8($res->decoded_content);
+    };
+    return $response;
+}
 1;
 

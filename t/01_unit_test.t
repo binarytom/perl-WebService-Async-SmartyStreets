@@ -1,25 +1,7 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::MockModule;
 use WebService::Async::SmartyStreets::Address;
-
-
-# my $cs_process = Test::MockModule->new('BOM::Event::Actions::CSNotifier');
-# $cs_process->mock(
-#     getSmartyStreetResult => sub {
-#         return 'verified';
-#     });
-
-# latitude { shift->{metadata}{latitude} }
-# sub longitude { shift->{metadata}{longitude} }
-# sub geocode_precision { shift->{metadata}{geocode_precision} }
-# sub max_geocode_precision { shift->{metadata}{max_geocode_precision} }
-# sub address_format { shift->{metadata}{address_format} }
-
-# sub status { lc shift->{analysis}{verification_status} }
-# sub address_precision { lc shift->{analysis}{address_precision} }
-# sub max_address_precision { lc shift->{analysis}{max_address_precision} }
 
 subtest 'Parsing test' => sub {
     my %dummy_data = (
