@@ -72,7 +72,7 @@ sub ua {
                 pipeline                 => 0,
                 max_connections_per_host => 4,
                 user_agent =>
-                    'Mozilla/4.0 (WebService::Async::SmartyStreets; TEAM@cpan.org; https://metacpan.org/pod/WebService::Async::SmartyStreets)',
+                    'Mozilla/4.0 (WebService::Async::SmartyStreets; BINARY@cpan.org; https://metacpan.org/pod/WebService::Async::SmartyStreets)',
             ));
         $ua;
         }
