@@ -89,9 +89,9 @@ my %status_level = (
 
 =head2 status_at_least
 
-Checks if the returned response at least hits a certain level (in terms of score)
-
-return type: 1 or 0
+Checks if the returned response is at least hits a certain level (in terms of score)
+Takes in: String of verification status
+Return : 1 or 0
 
 =cut
 
@@ -115,10 +115,10 @@ my %accuracy_level = (
 
 accuracy_at_least
 
-Similar with status at least, checks if the returned response at least hits a certain accuracy (in terms of score)
+Similar with status at least, checks if the returned response is at least hits a certain accuracy (in terms of score)
 Instantly returns 0 if the status is lower than 'partial'
-
-return type: 1 or 0
+Takes in: String of accuracy
+Return : 1 or 0
 
 =cut
 

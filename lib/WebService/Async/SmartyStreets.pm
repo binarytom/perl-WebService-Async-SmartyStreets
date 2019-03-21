@@ -57,7 +57,7 @@ use Log::Any qw($log);
 =head2 configure
 
 Configures the class with the auth_id and token
-Takes in: Hash of auth_id and token
+Takes in: Hash which consists of auth_id and token
 
 =cut
 
@@ -102,6 +102,17 @@ sub ua {
 
 Calls to different API depending on the country of the address.
 Takes in: Hash of address and required components
+
+Components includes:
+    - country (compulsory)
+    - address1
+    - address2
+    - organization	
+    - locality
+    - administrative_area
+    - postal_code
+    - geocode (true or false)
+    
 Returns: WebService::Async::SmartyStreets::Address object
 
 =cut
@@ -121,7 +132,7 @@ async sub verify_usa {
 =head2 verify
 
 Makes connection to SmartyStreets API and parses the response into WebService::Async::SmartyStreets::Address.
-Takes in: URI and hash
+Takes in: URI object and hash of address args
 Returns: WebService::Async::SmartyStreets::Address object
 
 =cut
