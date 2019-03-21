@@ -4,13 +4,37 @@ package WebService::Async::SmartyStreets;
 use strict;
 use warnings;
 
-our $VERSION = '1.001';
+our $VERSION = '0.001';
 
-=pod
+=HEAD
 
-WebService::Async::SmartyStreets
+WebService::Async::SmartyStreets - calls the SmartyStreets API and checks for the validity of the address
 
-This module calls the SmartyStreets API and checks for the validity of the address
+=head1 VERSION
+
+version 0.001
+
+=head1 SYNOPSIS
+    
+    my $loop = IO::Async::Loop->new;
+    $loop->add(
+        my $ss = WebService::Async::SmartyStreets->new(
+            # International token
+            auth_id => '...'
+            token => '...'
+        )
+    );
+    (async sub {
+        my $addr = await $ss->verify_international(
+            # insert address here
+        );
+    })->()->get;
+    
+=head1 DESCRIPTION
+
+his class calls the SmartyStreets API and parse the response to `WebService::Async::SmartyStreets::Address`
+
+=over 4
 
 =cut
 
@@ -30,14 +54,11 @@ use WebService::Async::SmartyStreets::Address;
 
 use Log::Any qw($log);
 
-=pod
+=head2 configure
 
-WebService::Async::SmartyStreets::Address
-
-This is a object that contains the response from SmartyStreets API 
+Configures the class with the auth_id and token
 
 =cut
-
 
 sub configure {
     my ($self, %args) = @_;
@@ -54,11 +75,9 @@ sub next_id {
     ++(shift->{id} //= 'AA00000000');
 }
 
-=pod
+=head2 ua
 
-ua
-
-User agent that makes the connection to the SmartyStreets API
+Creates a User agent (Net::Async::HTTP) that is used to make connection to the SmartyStreets API
 
 =cut
 
@@ -78,9 +97,7 @@ sub ua {
         }
 }
 
-=pod
-
-verify_international, verify_usa
+=head2 verify_international, verify_usa
 
 calls to different API depending on the country of the address
 
@@ -96,6 +113,13 @@ async sub verify_usa {
     my $uri = URI->new('https://us-street.api.smartystreets.com/street-address');
     return await $self->verify($uri => %args);
 }
+
+
+=head2 verify
+
+Makes connection to SmartyStreets API and parses the response into WebService::Async::SmartyStreets::Address
+
+=cut
 
 async sub verify {
     my ($self, $uri, %args) = @_;
@@ -115,6 +139,12 @@ async sub verify {
     return map { WebService::Async::SmartyStreets::Address->new(%$_) } @$decoded;
 }
 
+=head2 get_decoded_data
+
+Calls the SmartyStreets API then decode and return response
+
+=cut
+
 async sub get_decoded_data {
     my $self = shift;
     my $uri = shift;
@@ -124,5 +154,6 @@ async sub get_decoded_data {
     };
     return $response;
 }
+
 1;
 

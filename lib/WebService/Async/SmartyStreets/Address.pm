@@ -3,11 +3,51 @@ package WebService::Async::SmartyStreets::Address;
 use strict;
 use warnings;
 
-=pod
+=HEAD
 
-WebService::Async::SmartyStreets::Address
+WebService::Async::SmartyStreets::Address - object that contains the response from SmartyStreets API 
 
-This is a object that contains the response from SmartyStreets API 
+=head1 VERSION
+
+version 0.001
+
+=head1 SYNOPSIS
+
+    use WebService::Async::SmartyStreets::Address;
+    # Mocking a simple response from SmartyStreets API and parses it with WebService::Async::SmartyStreets::Address
+    my $response = WebService::Async::SmartyStreets::Address->new(
+            metadata => {
+            latitude => 101.2131,
+            longitude => 180.1223,
+            geocode_precision => "Premise",
+        },
+        analysis => {
+            verification_status => "Partial",
+            address_precision => "Premise",
+        });
+    # Accessing the attributes
+    print ($response->status);
+    
+=head1 DESCRIPTION
+
+represents (parses) the return response from SmartyStreets API in an object
+
+=head2 Construction
+    
+    WebService::Async::SmartyStreets::Address->new(
+        input_id => 12345,
+        organization => 'Beenary',
+        metadata => {
+            latitude => 101.2131,
+            longitude => 180.1223,
+            geocode_precision => "Premise",
+        },
+        analysis => {
+            verification_status => "Partial",
+            address_precision => "Premise",
+        });
+        
+=over 4
 
 =cut
 
@@ -21,7 +61,7 @@ sub address_parts {
     @{$self}{grep { exists $self->{$_} } map { 'address' . $_ } 1..12 }
 }
 
-=pod
+=head2
 
 Various subroutine that parses and returns the field from the caller
 
@@ -47,9 +87,7 @@ my %status_level = (
     verified => 3
 );
 
-=pod
-
-status_at_least
+=head2 status_at_least
 
 Checks if the returned response at least hits a certain level (in terms of score)
 

@@ -3,4 +3,4 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
 
 0.01    2019-03-14 00:00:00+00:00 UTC
-        First version, released os an POC.
+        Pre-release version, released os an POC.
