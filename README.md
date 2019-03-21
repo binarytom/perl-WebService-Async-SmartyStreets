@@ -1,6 +1,6 @@
 # NAME
 
-WebService::Async::SmartyStreets::Address - represents (parses) the return response from SmartyStreets API in an object
+WebService::Async::SmartyStreets::Address - parses the response from SmartyStreets API
 
 # VERSION
 
@@ -25,7 +25,7 @@ version 0.001
     
 # DESCRIPTION
 
-This is parses the response given by SmartyStreets API into an object to access them.
+This module parses the response by SmartyStreets API into an object to access them.
 
 ## Construction
 
@@ -101,48 +101,51 @@ Creates the object. takes in hashrefs
 
 ## status_at_least
 
-Checks if the returned response at least hits a certain level (in terms of score)
-
-return type: 1 or 0
+Checks if the returned response at least hits a certain level (in terms of score).
+Takes in: String 
+Returns: 1 or 0
 
 ## accuracy_at_least
 
-Checks if the returned response at least hits a certain accuracy (in terms of score)
-Instantly returns 0 if the status is lower than 'partial'
+Checks if the returned response at least hits a certain accuracy (in terms of score).
+Instantly returns 0 if the status is lower than 'partial'.
 
-return type: 1 or 0
+Takes in: String 
+Returns: 1 or 0
+
+# Attributes
 
 ## input_id
 
-Returns the input_id parsed
+Returns the input_id parsed.
 
 ## organization
 
-Returns the organization parsed
+Returns the organization parsed.
 
 ## latitude 
 
-Returns the latitude parsed
+Returns the latitude parsed.
 
 ## longitude
 
-Returns the latitude parsed
+Returns the latitude parsed.
 
 ## geocode_precision 
 
-Returns the geocode_precision parsed
+Returns the geocode_precision parsed.
 
 ## max_geocode_precision
 
-Returns the max_geocode_precision parsed
+Returns the max_geocode_precision parsed.
 
 ## address_format 
 
-Returns the value of address_format parsed
+Returns the value of address_format parsed.
 
 ## status 
 
-Returns the value of verification_status parsed
+Returns the value of verification_status parsed.
 
 The value returned should be either:
 
@@ -153,13 +156,11 @@ The value returned should be either:
 
 ## address_precision 
 
-Returns the value of address_precision parsed
-
-Address precision indicates the precision of the address values.
+Returns the value of address_precision parsed.
 
 ## max_address_precision
 
-Returns the value of max_address_precision parsed
+Returns the value of max_address_precision parsed.
 
 ---
 
@@ -191,39 +192,42 @@ This class calls the SmartyStreets API and parse the response to `WebService::As
 
 ## configure
 
-configures the class with auth_id and token
+configures the class with auth_id and token.
 
 ## auth_id
 
-Returns auth_id
+Returns auth_id.
 
 ## token
 
-Returns token
+Returns token.
 
 ## ua
 
-Constructs a Net::Async::HTTP object
+Constructs a Net::Async::HTTP object.
 
 ## verify_international
 
-Calls and passes the address data to SmartyStreets International API
-Returns a WebService::Async::SmartyStreets::Address object
+Calls and passes the address data to SmartyStreets International API.
+Takes in a hash.
+Returns a WebService::Async::SmartyStreets::Address object.
 
 ## verify_usa
 
-Calls and passes the address data to SmartyStreets USA API (USA address only)
-Returns a WebService::Async::SmartyStreets::Address object
+Calls and passes the address data to SmartyStreets USA API (USA address only).
+Takes in a hash.
+Returns a WebService::Async::SmartyStreets::Address object.
 
 ## verify
 
 Prepares the data and calls get_decoded_data to obtain the response and parses it
 to WebService::Async::SmartyStreets::Address object.
+Takes in uri and a hash
 
 ## get_decoded_data
 
-Gets the data by making the call to SmartyStreets API and decode the response
-Returns a Future Object
+Gets the data by making the call to SmartyStreets API and decode the response.
+Returns a Future Object.
 
 # AUTHOR
 
