@@ -16,23 +16,29 @@ version 0.001
 
 =head1 SYNOPSIS
     
-    my $loop = IO::Async::Loop->new;
-    $loop->add(
-        my $ss = WebService::Async::SmartyStreets->new(
-            # International token
-            auth_id => '...'
-            token => '...'
-        )
-    );
-    (async sub {
-        my $addr = await $ss->verify_international(
-            # insert address here
-        );
-    })->()->get;
+    {
+        my $ss;
+        sub get_smartystreets {
+            return $ss if $ss;
+            $ss = WebService::Async::SmartyStreets->new(
+                auth_id => #insert auth_id,
+                token   => #insert token,
+                );
+            IO::Async::Loop->new->add($ss);
+            return $ss;
+        }
+    }
+    
+    my $ss = get_smartystreets();
+
+    my $addr = $ss->verify_international(<hash of address element>, geocode => 'true')->get;
+    return $addr->status;
     
 =head1 DESCRIPTION
 
-his class calls the SmartyStreets API and parse the response to `WebService::Async::SmartyStreets::Address`
+This class calls the SmartyStreets API and parse the response to `WebService::Async::SmartyStreets::Address`
+
+This module uses Future::AsyncAwait, visit https://metacpan.org/pod/Future::AsyncAwait for more information.
 
 =over 4
 
