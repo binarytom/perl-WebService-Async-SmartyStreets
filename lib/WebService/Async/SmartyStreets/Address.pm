@@ -89,7 +89,7 @@ my %status_level = (
 
 =head2 status_at_least
 
-Checks if the returned response is at least hits a certain level (in terms of score)
+Checks if the returned response  at least hits a certain level (in terms of score)
 Takes in: String of verification status
 Return : 1 or 0
 
