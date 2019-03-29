@@ -3,7 +3,7 @@ use warnings;
 use Future;
 use Test::More;
 use Test::MockModule;
-use WebService::Async::SmartyStreets::International;
+use WebService::Async::SmartyStreets;
 use JSON::MaybeXS qw( encode_json );
 use Future::AsyncAwait;
 
@@ -43,13 +43,13 @@ $mock_ss->mock(
 
     
 subtest "Call SmartyStreets" => sub {
-    my $ss = WebService::Async::SmartyStreets::International->new(
+    my $ss = WebService::Async::SmartyStreets->new(
         # this function is mocked, so the values doesnt matter
         auth_id => '...',
         token => '...'
     );
     
-    my $addr = $ss->verify(
+    my $addr = $ss->verify_international(
         address1            => 'Jalan 1223 Jamse Bndo 012',
         address2            => '03/03',
         locality            => 'Sukabumi',

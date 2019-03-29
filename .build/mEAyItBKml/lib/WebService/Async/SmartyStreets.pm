@@ -98,41 +98,68 @@ sub ua {
         }
 }
 
+=head2 verify_international
+
+Calls to different API depending on the country of the address.
+Takes the following named parameters:
+
+= over 4
+
+= item * C<country> - country
+= item * C<address1> - address line 1
+= item * C<address2> - address line 2
+= item * C<organization> - name of organization (usually building names)
+= item * C<locality> - city
+= item * C<administrative_area> - state
+= item * C<postal_code> - post code
+= item * C<geocode> - true or false
+
+= back 
+
+Returns a L<Future> which resolves to a L<WebService::Async::SmartyStreets::Address> instance.
+
+=cut
+
+# async sub verify_international {
+#     my ($self, %args) = @_;
+#     my $uri = URI->new('https://international-street.api.smartystreets.com/verify');
+#     return await $self->verify($uri => %args);
+# }
+
+=head2 verify_international
+
+See L<WebService::Async::SmartyStreets/verify_international>.
+
+=cut
+
+async sub verify_usa {
+    my ($self, %args) = @_;
+    my $uri = URI->new('https://us-street.api.smartystreets.com/street-address');
+    return await $self->verify($uri => %args);
+}
+
+
 =head2 verify
 
 Makes connection to SmartyStreets API and parses the response into WebService::Async::SmartyStreets::Address.
 
 Takes the following named parameters:
 
-=over 4
+= over 4
 
-=item * C<uri> - URI address (in string)
-=item * C<args> - address parameters in hash (See L<WebService::Async::SmartyStreets/verify_international>)
+= item * C<uri> - URI address that the process will make the call to
+= item * C<args> - address parametes in hash (See L<WebService::Async::SmartyStreets/verify_international>)
 
-=back
-
-args consists of the following parameters:
-
-=over 4
-
-=item * C<country> - country
-=item * C<address1> - address line 1
-=item * C<address2> - address line 2
-=item * C<organization> - name of organization (usually building names)
-=item * C<locality> - city
-=item * C<administrative_area> - state
-=item * C<postal_code> - post code
-=item * C<geocode> - true or false
-
-=back 
+= back 
 
 Returns L<WebService::Async::SmartyStreets::Address> object
 
 =cut
 
 async sub verify {
-    my ($self, $uri_string, %args) = @_;
-    my $uri = URI->new($uri_string);
+    my ($self, %args) = @_;
+
+    my $uri = URI->new(get_uri());
 
     $uri->query_param($_ => $args{$_}) for keys %args;
     $uri->query_param(
@@ -155,11 +182,11 @@ async sub verify {
 Calls the SmartyStreets API then decode and return response
 Takes the following named parameters:
 
-=over 4
+= over 4
 
-=item * C<uri> - URI address that the process will make the call to
+= item * C<uri> - URI address that the process will make the call to
 
-=back 
+= back 
 
 Returns: decoded response in Hash
 
@@ -175,15 +202,13 @@ async sub get_decoded_data {
     return $response;
 }
 
-=head2 get_uri
-
-Dummy sub designed to be overriden in L<WebService::Async::SmartyStreets::International> and L<WebService::Async::SmartyStreets::USA>
-
-=cut
-
 sub get_uri {
     die "Subroutine not overriden in the child's module";
 }
+
+# sub get_address {
+#     die "Subroutine not overriden in the child's module";
+# }
 
 1;
 

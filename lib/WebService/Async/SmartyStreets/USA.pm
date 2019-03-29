@@ -1,4 +1,4 @@
-package WebService::Async::SmartyStreets::International;
+package WebService::Async::SmartyStreets::USA;
 
 use strict;
 use warnings;
@@ -12,7 +12,7 @@ Returns URI in string
 
 =cut
 
-sub get_uri { return 'https://international-street.api.smartystreets.com/verify'; }
+sub get_uri { return 'https://us-street.api.smartystreets.com/street-address'; }
 
 =head2 verify
 
