@@ -168,10 +168,10 @@ Returns: decoded response in Hash
 async sub get_decoded_data {
     my $self = shift;
     my $uri = shift;
-    my $response = do {
-        my $res = await $self->ua->GET($uri);
-        decode_json_utf8($res->decoded_content);
-    };
+    
+    my $res = await $self->ua->GET($uri);
+    my $response = decode_json_utf8($res->decoded_content);
+        
     return $response;
 }
 
