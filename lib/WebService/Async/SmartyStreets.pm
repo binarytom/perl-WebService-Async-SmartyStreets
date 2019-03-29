@@ -10,26 +10,20 @@ our $VERSION = '0.001';
 
 WebService::Async::SmartyStreets - calls the SmartyStreets API and checks for the validity of the address
 
-=head1 VERSION
-
-version 0.001
-
 =head1 SYNOPSIS
     
-    {
-        my $ss;
-        sub get_smartystreets {
-            return $ss if $ss;
-            $ss = WebService::Async::SmartyStreets->new(
-                auth_id => #insert auth_id,
-                token   => #insert token,
-                );
-            IO::Async::Loop->new->add($ss);
-            return $ss;
-        }
+    my $ss;
+    sub get_smartystreets {
+        return $ss if $ss;
+        $ss = WebService::Async::SmartyStreets->new(
+            auth_id => #insert auth_id,
+            token   => #insert token,
+            );
+        IO::Async::Loop->new->add($ss);
+        return $ss;
     }
     
-    my $ss = get_smartystreets();
+    $ss = get_smartystreets();
 
     my $addr = $ss->verify_international(<hash of address element>, geocode => 'true')->get;
     return $addr->status;
@@ -38,7 +32,7 @@ version 0.001
 
 This class calls the SmartyStreets API and parse the response to `WebService::Async::SmartyStreets::Address`
 
-This module uses Future::AsyncAwait, visit https://metacpan.org/pod/Future::AsyncAwait for more information.
+Note that this module uses L<Future::AsyncAwait>
 
 =over 4
 
@@ -84,7 +78,7 @@ sub next_id {
 
 =head2 ua
 
-Creates a User agent (Net::Async::HTTP) that is used to make connection to the SmartyStreets API
+Accessor for the L<Net::Async::HTTP> instance which will be used for SmartyStreets API requests.
 
 =cut
 
@@ -104,22 +98,25 @@ sub ua {
         }
 }
 
-=head2 verify_international, verify_usa
+=head2 verify_international
 
 Calls to different API depending on the country of the address.
-Takes in: Hash of address and required components
+Takes the following named parameters:
 
-Components includes:
-    - country (compulsory)
-    - address1
-    - address2
-    - organization	
-    - locality
-    - administrative_area
-    - postal_code
-    - geocode (true or false)
-    
-Returns: WebService::Async::SmartyStreets::Address object
+= over 4
+
+= item * C<country> - country
+= item * C<address1> - address line 1
+= item * C<address2> - address line 2
+= item * C<organization> - name of organization (usually building names)
+= item * C<locality> - city
+= item * C<administrative_area> - state
+= item * C<postal_code> - post code
+= item * C<geocode> - true or false
+
+= back 
+
+Returns a L<Future> which resolves to a L<WebService::Async::SmartyStreets::Address> instance.
 
 =cut
 
@@ -128,6 +125,13 @@ async sub verify_international {
     my $uri = URI->new('https://international-street.api.smartystreets.com/verify');
     return await $self->verify($uri => %args);
 }
+
+=head2 verify_international
+
+See L<WebService::Async::SmartyStreets/verify_international>.
+
+=cut
+
 async sub verify_usa {
     my ($self, %args) = @_;
     my $uri = URI->new('https://us-street.api.smartystreets.com/street-address');
@@ -138,8 +142,17 @@ async sub verify_usa {
 =head2 verify
 
 Makes connection to SmartyStreets API and parses the response into WebService::Async::SmartyStreets::Address.
-Takes in: URI object and hash of address args
-Returns: WebService::Async::SmartyStreets::Address object
+
+Takes the following named parameters:
+
+= over 4
+
+= item * C<uri> - URI address that the process will make the call to
+= item * C<args> - address parametes in hash (See L<WebService::Async::SmartyStreets/verify_international>)
+
+= back 
+
+Returns L<WebService::Async::SmartyStreets::Address> object
 
 =cut
 
@@ -164,7 +177,14 @@ async sub verify {
 =head2 get_decoded_data
 
 Calls the SmartyStreets API then decode and return response
-Takes in: Uri
+Takes the following named parameters:
+
+= over 4
+
+= item * C<uri> - URI address that the process will make the call to
+
+= back 
+
 Returns: decoded response in Hash
 
 =cut
