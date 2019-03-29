@@ -120,11 +120,11 @@ Returns a L<Future> which resolves to a L<WebService::Async::SmartyStreets::Addr
 
 =cut
 
-async sub verify_international {
-    my ($self, %args) = @_;
-    my $uri = URI->new('https://international-street.api.smartystreets.com/verify');
-    return await $self->verify($uri => %args);
-}
+# async sub verify_international {
+#     my ($self, %args) = @_;
+#     my $uri = URI->new('https://international-street.api.smartystreets.com/verify');
+#     return await $self->verify($uri => %args);
+# }
 
 =head2 verify_international
 
@@ -157,7 +157,10 @@ Returns L<WebService::Async::SmartyStreets::Address> object
 =cut
 
 async sub verify {
-    my ($self, $uri, %args) = @_;
+    my ($self, %args) = @_;
+
+    my $uri = URI->new(get_uri());
+
     $uri->query_param($_ => $args{$_}) for keys %args;
     $uri->query_param(
         'auth-id' => ($self->auth_id // die 'need an auth ID'),
@@ -198,6 +201,14 @@ async sub get_decoded_data {
     };
     return $response;
 }
+
+sub get_uri {
+    die "Subroutine not overriden in the child's module";
+}
+
+# sub get_address {
+#     die "Subroutine not overriden in the child's module";
+# }
 
 1;
 
