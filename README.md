@@ -199,33 +199,77 @@ Returns token.
 
 ## ua
 
-Constructs a Net::Async::HTTP object.
+Accessor for the `Net::Async::HTTP` instance which will be used for SmartyStreets API requests.
 
-## verify_international
-
-Calls and passes the address data to SmartyStreets International API.
-Returns WebService::Async::SmartyStreets::Address object.
-
-## verify_usa
-
-Calls and passes the address data to SmartyStreets USA API (USA address only).
-Returns WebService::Async::SmartyStreets::Address object.
 
 ## verify
 
-Prepares the data and calls get_decoded_data to obtain the response and parses it
-to WebService::Async::SmartyStreets::Address object.
-Takes in uri and a hash
+Makes connection to SmartyStreets API and parses the response into `WebService::Async::SmartyStreets::Address`.
+
+Takes the following named parameters:
+- uri - URI address (in string)
+- args - address parameters in hash (See `WebService::Async::SmartyStreets/verify_international`)
+
+args consists of the following parameters:
+
+- country - country
+- address1 - address line 1
+- address2 - address line 2
+- organization - name of organization (usually building names)
+- locality - city
+- administrative_area - state
+- postal_code - post code
+- geocode - true or false
 
 ## get_decoded_data
 
-Gets the data by making the call to SmartyStreets API and decode the response.
-Returns a Future Object.
+Parses the response give by SmartyStreets 
+
+More information of the resposne can be seen in [SmartyStreets Documentation](https://smartystreets.com/docs/cloud/international-street-api)
+
+Returns an arrayref of hashrefs which the keys corresponds to `WebService::Async::SmartyStreets::Address`
 
 ## get_uri
 
-Dummy sub designed to be overriden in L<WebService::Async::SmartyStreets::International> and L<WebService::Async::SmartyStreets::USA>
+Dummy sub designed to be overriden in `WebService::Async::SmartyStreets::International` and `WebService::Async::SmartyStreets::USA`
 
+--- 
+
+# NAME
+
+WebService::Async::SmartyStreets::International
+
+# Description
+
+This module is a child of `WebService::Async::SmartyStreets`
+
+## get_uri
+
+Overrides get_uri in `WebService::Async::SmartyStreets`
+Returns URI in string  
+
+## verify
+
+Overrides verify in `WebService::Async::SmartyStreets`
+Gets the input arguments and pass it to the parents
+
+# NAME
+
+WebService::Async::SmartyStreets::USA
+
+# Description
+
+This module is a child of `WebService::Async::SmartyStreets`
+
+## get_uri
+
+Overrides get_uri in `WebService::Async::SmartyStreets`
+Returns URI in string  
+
+## verify
+
+Overrides verify in `WebService::Async::SmartyStreets`
+Gets the input arguments and pass it to the parents
 
 # AUTHOR
 
