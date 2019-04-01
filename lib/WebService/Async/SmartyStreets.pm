@@ -157,6 +157,9 @@ Takes the following named parameters:
 =item * C<uri> - URI address that the process will make the call to
 
 =back 
+Parses the response give by SmartyStreets 
+
+More information of the resposne can be seen in L<SmartyStreets Documentation | https://smartystreets.com/docs/cloud/international-street-api>
 
 Returns an arrayref of hashrefs which the keys corresponds to L<WebService::Async::SmartyStreets::Address>
 
