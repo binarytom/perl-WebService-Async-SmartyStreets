@@ -13,20 +13,17 @@ WebService::Async::SmartyStreets - calls the SmartyStreets API and checks for th
 =head1 SYNOPSIS
     
     my $ss;
-    sub get_smartystreets {
-        return $ss if $ss;
-        $ss = WebService::Async::SmartyStreets->new(
-            auth_id => #insert auth_id,
-            token   => #insert token,
-            );
-        IO::Async::Loop->new->add($ss);
-        return $ss;
-    }
-    
+
+    $ss = WebService::Async::SmartyStreets->new(
+        auth_id => #insert auth_id,
+        token   => #insert token,
+        );
+    IO::Async::Loop->new->add($ss);
+
     $ss = get_smartystreets();
 
     my $addr = $ss->verify_international(<hash of address element>, geocode => 'true')->get;
-    return $addr->status;
+    print($addr->status);
     
 =head1 DESCRIPTION
 
@@ -171,7 +168,8 @@ async sub get_decoded_data {
     
     my $res = await $self->ua->GET($uri);
     my $response = decode_json_utf8($res->decoded_content);
-        
+use Data::Dumper;
+warn Dumper($response);
     return $response;
 }
 
