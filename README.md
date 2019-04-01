@@ -102,16 +102,11 @@ Creates the object. takes in hashrefs
 ## status_at_least
 
 Checks if the returned response at least hits a certain level (in terms of score).
-Takes in: String 
-Returns: 1 or 0
 
 ## accuracy_at_least
 
 Checks if the returned response at least hits a certain accuracy (in terms of score).
 Instantly returns 0 if the status is lower than 'partial'.
-
-Takes in: String 
-Returns: 1 or 0
 
 # Attributes
 
@@ -182,7 +177,7 @@ WebService::Async::SmartyStreets;
         my $addr = await $ss->verify_international(
             # insert address here
         );
-    })->()->get;
+    })->get;
     
 # DESCRIPTION
 
@@ -209,14 +204,12 @@ Constructs a Net::Async::HTTP object.
 ## verify_international
 
 Calls and passes the address data to SmartyStreets International API.
-Takes in a hash.
-Returns a WebService::Async::SmartyStreets::Address object.
+Returns WebService::Async::SmartyStreets::Address object.
 
 ## verify_usa
 
 Calls and passes the address data to SmartyStreets USA API (USA address only).
-Takes in a hash.
-Returns a WebService::Async::SmartyStreets::Address object.
+Returns WebService::Async::SmartyStreets::Address object.
 
 ## verify
 
