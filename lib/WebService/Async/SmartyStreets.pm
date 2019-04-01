@@ -27,7 +27,7 @@ WebService::Async::SmartyStreets - calls the SmartyStreets API and checks for th
     
 =head1 DESCRIPTION
 
-This class calls the SmartyStreets API and parse the response to `WebService::Async::SmartyStreets::Address`
+This class calls the SmartyStreets API and parse the response to L<WebService::Async::SmartyStreets::Address>
 
 Note that this module uses L<Future::AsyncAwait>
 
@@ -99,6 +99,14 @@ sub ua {
 
 Makes connection to SmartyStreets API and parses the response into WebService::Async::SmartyStreets::Address.
 
+    my $ss = WebService::Async::SmartyStreets::International->new(
+        auth_id => "...",
+        token   => "...",
+    );
+    IO::Async::Loop->new->add($ss);
+
+    my $addr = $ss->verify("URI String", %address_to_check)->get;
+
 Takes the following named parameters:
 
 =over 4
@@ -150,6 +158,9 @@ async sub verify {
 =head2 get_decoded_data
 
 Calls the SmartyStreets API then decode and return response
+
+    my $decoded = await get_decoded_data($self, $uri)
+
 Takes the following named parameters:
 
 =over 4
