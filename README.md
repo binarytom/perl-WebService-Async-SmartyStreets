@@ -222,6 +222,11 @@ Takes in uri and a hash
 Gets the data by making the call to SmartyStreets API and decode the response.
 Returns a Future Object.
 
+## get_uri
+
+Dummy sub designed to be overriden in L<WebService::Async::SmartyStreets::International> and L<WebService::Async::SmartyStreets::USA>
+
+
 # AUTHOR
 
 Binary.com

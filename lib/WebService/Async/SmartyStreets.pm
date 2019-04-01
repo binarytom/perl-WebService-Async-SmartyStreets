@@ -157,7 +157,7 @@ async sub verify {
 
 =head2 get_decoded_data
 
-Calls the SmartyStreets API then decode and return response
+Calls the SmartyStreets API then decode and parses the response give by SmartyStreets 
 
     my $decoded = await get_decoded_data($self, $uri)
 
@@ -168,7 +168,6 @@ Takes the following named parameters:
 =item * C<uri> - URI address that the process will make the call to
 
 =back 
-Parses the response give by SmartyStreets 
 
 More information of the resposne can be seen in L<SmartyStreets Documentation | https://smartystreets.com/docs/cloud/international-street-api>
 
