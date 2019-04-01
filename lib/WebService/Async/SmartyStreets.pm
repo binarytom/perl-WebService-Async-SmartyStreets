@@ -168,8 +168,7 @@ async sub get_decoded_data {
     
     my $res = await $self->ua->GET($uri);
     my $response = decode_json_utf8($res->decoded_content);
-use Data::Dumper;
-warn Dumper($response);
+
     return $response;
 }
 
