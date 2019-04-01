@@ -158,7 +158,7 @@ Takes the following named parameters:
 
 =back 
 
-Returns: decoded response in Hash
+Returns an arrayref of hashrefs which the keys corresponds to L<WebService::Async::SmartyStreets::Address>
 
 =cut
 

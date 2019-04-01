@@ -61,22 +61,88 @@ sub address_parts {
     @{$self}{grep { exists $self->{$_} } map { 'address' . $_ } 1..12 }
 }
 
-=head2
+=head2 input_id
 
-Various subroutine that parses and returns the field from the caller
+Returns the value of the input_id
+
+Example usage:
+
+    $obj->input_id;
 
 =cut
 
 sub input_id { shift->{input_id} }
+
+=head2 organization
+
+Returns the value of the organization
+
+=cut
+
 sub organization { shift->{organization} }
+
+=head2 latitude
+
+Returns the value of the latitude
+
+=cut
+
 sub latitude { shift->{metadata}{latitude} }
+
+=head2 longitude
+
+Returns the value of the longitude
+
+=cut
+
 sub longitude { shift->{metadata}{longitude} }
+
+=head2 geocode_precision
+
+Returns the value of the geocode_precision
+
+=cut
+
 sub geocode_precision { shift->{metadata}{geocode_precision} }
+
+=head2 max_geocode_precision
+
+Returns the value of the max_geocode_precision
+
+=cut
+
 sub max_geocode_precision { shift->{metadata}{max_geocode_precision} }
+
+=head2 address_format
+
+Returns the value of the address_format
+
+=cut
+
 sub address_format { shift->{metadata}{address_format} }
 
+=head2 status
+
+Returns the value of the status
+
+=cut
+
 sub status { lc shift->{analysis}{verification_status} // ''}
+
+=head2 address_precision
+
+Returns the value of the address_precision
+
+=cut
+
 sub address_precision { lc shift->{analysis}{address_precision} // ''}
+
+=head2 max_address_precision
+
+Returns the value of the max_address_precision
+
+=cut
+
 sub max_address_precision { lc shift->{analysis}{max_address_precision} // ''}
 
 # Maps each verification response into a score
@@ -90,8 +156,14 @@ my %status_level = (
 =head2 status_at_least
 
 Checks if the returned response  at least hits a certain level (in terms of score)
-Takes in: String of verification status
-Return : 1 or 0
+
+Example Usage:
+
+    $obj->status_at_least("partial");
+
+Takes L<String> which consists of verification status ("verified", "partial", "ambiguous", "none")
+
+Returns 1 or 0
 
 =cut
 
@@ -116,9 +188,15 @@ my %accuracy_level = (
 accuracy_at_least
 
 Similar with status at least, checks if the returned response is at least hits a certain accuracy (in terms of score)
-Instantly returns 0 if the status is lower than 'partial'
-Takes in: String of accuracy
-Return : 1 or 0
+
+Example Usage:
+
+    $obj->accuracy_at_least("premise");
+
+Takes L<String> which consists of address accuracy ("none", "administrative_area", "locality", "thoroughfare", "premise", "delivery_point")
+
+Returns 0 if the status is lower than 'partial'
+Returns 1 or 0
 
 =cut
 
