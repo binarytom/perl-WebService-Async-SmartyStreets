@@ -12,15 +12,11 @@ WebService::Async::SmartyStreets - calls the SmartyStreets API and checks for th
 
 =head1 SYNOPSIS
     
-    my $ss;
-
-    $ss = WebService::Async::SmartyStreets->new(
+    my $ss = WebService::Async::SmartyStreets->new(
         auth_id => #insert auth_id,
         token   => #insert token,
         );
     IO::Async::Loop->new->add($ss);
-
-    $ss = get_smartystreets();
 
     my $addr = $ss->verify_international(<hash of address element>, geocode => 'true')->get;
     print($addr->status);
