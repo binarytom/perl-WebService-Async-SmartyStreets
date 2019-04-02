@@ -11,19 +11,31 @@ our $VERSION = '0.001';
 WebService::Async::SmartyStreets - calls the SmartyStreets API and checks for the validity of the address
 
 =head1 SYNOPSIS
-    
-    my $ss = WebService::Async::SmartyStreets->new(
+
+    my $ss = WebService::Async::SmartyStreets::International->new(
         auth_id => #insert auth_id,
         token   => #insert token,
         );
     IO::Async::Loop->new->add($ss);
 
-    my $addr = $ss->verify_international(<hash of address element>, geocode => 'true')->get;
+    my $addr = $ss->verify(<list of address element>, geocode => 'true')->get;
     print($addr->status);
-    
+
 =head1 DESCRIPTION
 
-This class calls the SmartyStreets API and parse the response to L<WebService::Async::SmartyStreets::Address>
+This module calls the SmartyStreets API and parse the response to L<WebService::Async::SmartyStreets::Address>
+
+The module is split into 2 packages which are not described in this section. Unless stated otherwise, please consider using the child module.
+
+For further information, please check the following child modules as they accesses different API:
+
+    L<WebService::Async::SmartyStreets::International>
+
+        This module accesses the SmartyStreets International Street Address API
+
+    L<WebService::Async::SmartyStreets::USA>
+
+        This module accesses the SmartyStreets US Street Address API
 
 Note that this module uses L<Future::AsyncAwait>
 
@@ -50,7 +62,16 @@ use Log::Any qw($log);
 =head2 configure
 
 Configures the class with the auth_id and token
-Takes in: Hash which consists of auth_id and token
+
+Takes the following named parameters:
+
+=over 4
+
+=item * C<auth_id> - auth_id obtained from SmartyStreet
+
+=item * C<token> - token obtained from SmartyStreet
+
+=back
 
 =cut
 
@@ -95,20 +116,17 @@ sub ua {
 
 Makes connection to SmartyStreets API and parses the response into WebService::Async::SmartyStreets::Address.
 
-    my $ss = WebService::Async::SmartyStreets::International->new(
-        auth_id => "...",
-        token   => "...",
-    );
-    IO::Async::Loop->new->add($ss);
+    my $addr = $ss->verify('https://international-street.api.smartystreets.com/verify', %address_to_check)->get;
 
-    my $addr = $ss->verify("URI String", %address_to_check)->get;
+Please consider using the "verify" subroutine in L<WebService::Async::SmartyStreets::International> or L<WebService::Async::SmartyStreets::US> instead
 
 Takes the following named parameters:
 
 =over 4
 
-=item * C<uri> - URI address (in string)
-=item * C<args> - address parameters in hash (See L<WebService::Async::SmartyStreets/verify_international>)
+=item * C<uri> - URI address (URL address to be pointed at)
+
+=item * C<args> - address parameters in a list of keys and values (See L<WebService::Async::SmartyStreets/verify_international>)
 
 =back
 
@@ -117,15 +135,22 @@ args consists of the following parameters:
 =over 4
 
 =item * C<country> - country
+
 =item * C<address1> - address line 1
+
 =item * C<address2> - address line 2
+
 =item * C<organization> - name of organization (usually building names)
+
 =item * C<locality> - city
+
 =item * C<administrative_area> - state
+
 =item * C<postal_code> - post code
+
 =item * C<geocode> - true or false
 
-=back 
+=back
 
 Returns L<WebService::Async::SmartyStreets::Address> object
 
@@ -165,7 +190,7 @@ Takes the following named parameters:
 
 =back 
 
-More information of the resposne can be seen in L<SmartyStreets Documentation | https://smartystreets.com/docs/cloud/international-street-api>
+More information on the response can be seen in L<SmartyStreets Documentation | https://smartystreets.com/docs/cloud/international-street-api>
 
 Returns an arrayref of hashrefs which the keys corresponds to L<WebService::Async::SmartyStreets::Address>
 
@@ -179,16 +204,6 @@ async sub get_decoded_data {
     my $response = decode_json_utf8($res->decoded_content);
 
     return $response;
-}
-
-=head2 get_uri
-
-Dummy sub designed to be overriden in L<WebService::Async::SmartyStreets::International> and L<WebService::Async::SmartyStreets::USA>
-
-=cut
-
-sub get_uri {
-    die "Subroutine not overriden in the child's module";
 }
 
 1;
