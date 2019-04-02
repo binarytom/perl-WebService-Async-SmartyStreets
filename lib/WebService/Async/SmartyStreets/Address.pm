@@ -56,11 +56,6 @@ sub new {
     bless \%args, $class
 }
 
-sub address_parts {
-    my ($self) = @_;
-    @{$self}{grep { exists $self->{$_} } map { 'address' . $_ } 1..12 }
-}
-
 =head2 input_id
 
 Returns the value of the input_id
