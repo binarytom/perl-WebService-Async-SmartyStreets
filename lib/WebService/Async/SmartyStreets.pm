@@ -6,7 +6,7 @@ use warnings;
 
 our $VERSION = '0.001';
 
-=HEAD
+=head1 NAME
 
 WebService::Async::SmartyStreets - calls the SmartyStreets API and checks for the validity of the address
 
