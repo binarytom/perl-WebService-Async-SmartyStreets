@@ -10,12 +10,15 @@ our $VERSION = '0.001';
 
 WebService::Async::SmartyStreets - calls the SmartyStreets API and checks for the validity of the address
 
+=head1 VERSION
+
+version 0.001
+
 =head1 SYNOPSIS
 
-    my $ss = WebService::Async::SmartyStreets->new(
+    my $ss = WebService::Async::SmartyStreets::International->new(
         auth_id => #insert auth_id,
         token   => #insert token,
-        api_choice => #international or us,
         );
     IO::Async::Loop->new->add($ss);
 
@@ -25,6 +28,18 @@ WebService::Async::SmartyStreets - calls the SmartyStreets API and checks for th
 =head1 DESCRIPTION
 
 This module calls the SmartyStreets API and parse the response to L<WebService::Async::SmartyStreets::Address>
+
+The module is split into 2 packages which are not described in this section. Unless stated otherwise, please consider using the child module.
+
+For further information, please check the following child modules as they accesses different API:
+
+    L<WebService::Async::SmartyStreets::International>
+
+        This module accesses the SmartyStreets International Street Address API
+
+    L<WebService::Async::SmartyStreets::USA>
+
+        This module accesses the SmartyStreets US Street Address API
 
 Note that this module uses L<Future::AsyncAwait>
 
@@ -66,7 +81,7 @@ Takes the following named parameters:
 
 sub configure {
     my ($self, %args) = @_;
-    for my $k (qw(auth_id token api_choice)) {
+    for my $k (qw(auth_id token)) {
         $self->{$k} = delete $args{$k} if exists $args{$k};
     }
     $self->next::method(%args);
@@ -74,7 +89,6 @@ sub configure {
 
 sub auth_id { shift->{auth_id} }
 sub token   { shift->{token} }
-sub api_choice   { shift->{api_choice} }
 
 sub next_id {
     ++(shift->{id} //= 'AA00000000');
@@ -147,20 +161,12 @@ Returns L<WebService::Async::SmartyStreets::Address> object
 =cut
 
 async sub verify {
+    # use Data::Dumper;
+# warn "HI: ".Dumper(@_);
+    my ($self, $args) = @_;
+    my $uri = URI->new('https://international-street.api.smartystreets.com/verify');
 
-    my ($self, $api_choice, %args) = @_;
-    
-    my %valid_api_choice = (
-        international => 'https://international-street.api.smartystreets.com/verify',
-        us            => 'https://us-street.api.smartystreets.com/street-address',
-    );
-    
-    $api_choice //= 'international';
-    die "Invalid API choice" unless ($valid_api_choice{$api_choice});
-    
-    my $uri = URI->new($valid_api_choice{$api_choice});
-
-    $uri->query_param($_ => $args{$_}) for keys %args;
+    $uri->query_param($_ => $args{$_}) for keys %$args;
     $uri->query_param(
         'auth-id' => ($self->auth_id // die 'need an auth ID'),
     );
@@ -172,7 +178,6 @@ async sub verify {
     );
     $log->tracef('GET %s', '' . $uri);
     my $decoded = await get_decoded_data($self, $uri);
-
     $log->tracef('=> %s', $decoded);
     return map { WebService::Async::SmartyStreets::Address->new(%$_) } @$decoded;
 }
@@ -208,4 +213,3 @@ async sub get_decoded_data {
 }
 
 1;
-
