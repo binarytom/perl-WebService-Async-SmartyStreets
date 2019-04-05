@@ -3,7 +3,7 @@ use warnings;
 use Future;
 use Test::More;
 use Test::MockModule;
-use Test::Fatal;
+use Test::Fatal qw(dies_ok);
 use WebService::Async::SmartyStreets;
 use JSON::MaybeXS qw( encode_json );
 use Future::AsyncAwait;
@@ -77,9 +77,10 @@ subtest "Call SmartyStreets" => sub {
     is ($addr->accuracy_at_least('delivery_point'), '', "Accuracy checking is correct");
     
     # It should die as the api_choice is not valid
-    $data{api_choice} = 'alibaba';
-
-    dies_ok { $ss->verify(%data)->get() } 'code that fails';
+    $data{api_choice} = 'test';
+    
+    dies_ok { $ss->verify(%data)->get() } 'Invalid API token test';
+    
 };
 
 done_testing();
