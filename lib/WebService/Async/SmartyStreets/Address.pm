@@ -52,9 +52,9 @@ sub new {
 =head2 Getters
 
 The following subroutine returns each attributes respectively:
-    
+
 Example usage:
-    
+
     $obj->input_id;
 
 =over 4
@@ -79,7 +79,7 @@ Example usage:
 
 =item * C<max_address_precision>
 
-=back 
+=back
 
 =cut
 

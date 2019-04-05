@@ -54,13 +54,11 @@ use Log::Any qw($log);
 
 Makes connection to SmartyStreets API and parses the response into WebService::Async::SmartyStreets::Address.
 
-    my $addr = $ss->verify('international', %address_to_check)->get;
+    my $addr = $ss->verify(%address_to_check)->get;
 
 Takes the following named parameters:
 
 =over 4
-
-=item * C<api_choice> - specifies which SmartyStreets API to call (accepts only 'international' and 'us')
 
 =item * C<args> - address parameters in a list of keys and values (See L<WebService::Async::SmartyStreets/verify_international>)
 
@@ -70,7 +68,7 @@ args consists of the following parameters:
 
 =over 4
 
-=item * C<country> - country
+=item * C<country> - country [THIS FIELD IS COMPULSORY]
 
 =item * C<address1> - address line 1
 
@@ -86,6 +84,8 @@ args consists of the following parameters:
 
 =item * C<geocode> - true or false
 
+=item * C<api_choice> - [NOTE] specifies which SmartyStreets API to call (by passing in this parameter, it would overide the one passed in config)
+
 =back
 
 Returns L<WebService::Async::SmartyStreets::Address> object
@@ -94,16 +94,20 @@ Returns L<WebService::Async::SmartyStreets::Address> object
 
 async sub verify {
 
-    my ($self, $api_choice, %args) = @_;
+    my ($self, %args) = @_;
     
     my %valid_api_choice = (
         international => 'https://international-street.api.smartystreets.com/verify',
         us            => 'https://us-street.api.smartystreets.com/street-address',
     );
+
+    # provides the option to switch API token choice by overiding
+    my $ss_api_choice = $args{api_choice} // $self->api_choice;
+
     # dies if the $api_choice is not valid
-    die "Invalid API choice" unless ($valid_api_choice{$api_choice});
+    die "Invalid API choice. Takes in 'international' and 'us' only." unless ($valid_api_choice{$ss_api_choice});
     
-    my $uri = URI->new($valid_api_choice{$api_choice});
+    my $uri = URI->new($valid_api_choice{$ss_api_choice});
 
     $uri->query_param($_ => $args{$_}) for keys %args;
     $uri->query_param(

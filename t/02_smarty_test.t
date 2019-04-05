@@ -3,6 +3,7 @@ use warnings;
 use Future;
 use Test::More;
 use Test::MockModule;
+use Test::Fatal;
 use WebService::Async::SmartyStreets;
 use JSON::MaybeXS qw( encode_json );
 use Future::AsyncAwait;
@@ -54,8 +55,8 @@ subtest "Call SmartyStreets" => sub {
         api_choice => 'international'
     );
     
-    my $addr = $ss->verify(
-        'international',
+    my %data = (
+        api_choice          => 'international',
         address1            => 'Jalan 1223 Jamse Bndo 012',
         address2            => '03/03',
         locality            => 'Sukabumi',
@@ -63,7 +64,9 @@ subtest "Call SmartyStreets" => sub {
         postal_code         => '43145',
         country             => 'Indonesia',
         geocode             => 'true',
-    )->get();
+    );
+
+    my $addr = $ss->verify(%data)->get();
 
     # Check if status check is correct
     is ($addr->status_at_least('none'), 1, "Verification score is correct");
@@ -73,6 +76,10 @@ subtest "Call SmartyStreets" => sub {
     is ($addr->accuracy_at_least('locality'), 1, "Accuracy checking is correct");
     is ($addr->accuracy_at_least('delivery_point'), '', "Accuracy checking is correct");
     
+    # It should die as the api_choice is not valid
+    $data{api_choice} = 'alibaba';
+
+    dies_ok { $ss->verify(%data)->get() } 'code that fails';
 };
 
 done_testing();
