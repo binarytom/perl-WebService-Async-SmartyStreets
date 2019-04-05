@@ -3,7 +3,7 @@ package WebService::Async::SmartyStreets::Address;
 use strict;
 use warnings;
 
-=head1
+=head1 NAME
 
 WebService::Async::SmartyStreets::Address - object that contains the response from SmartyStreets API 
 
