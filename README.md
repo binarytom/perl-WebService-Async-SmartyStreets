@@ -171,7 +171,7 @@ WebService::Async::SmartyStreets;
         )
     );
     async sub {
-        my $addr = await $ss->verify_international(
+        my $addr = await $ss->verify(
             # insert address here
         );
     }->get;
