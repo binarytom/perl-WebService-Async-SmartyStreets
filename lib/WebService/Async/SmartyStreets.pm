@@ -30,6 +30,8 @@ Note that this module uses L<Future::AsyncAwait>
 
 =over 4
 
+=back
+
 =cut
 
 use parent qw(IO::Async::Notifier);
@@ -48,73 +50,17 @@ use WebService::Async::SmartyStreets::Address;
 
 use Log::Any qw($log);
 
-=head2 configure
-
-Configures the class with the auth_id and token
-
-Takes the following named parameters:
-
-=over 4
-
-=item * C<auth_id> - auth_id obtained from SmartyStreet
-
-=item * C<token> - token obtained from SmartyStreet
-
-=back
-
-=cut
-
-sub configure {
-    my ($self, %args) = @_;
-    for my $k (qw(auth_id token api_choice)) {
-        $self->{$k} = delete $args{$k} if exists $args{$k};
-    }
-    $self->next::method(%args);
-}
-
-sub auth_id { shift->{auth_id} }
-sub token   { shift->{token} }
-sub api_choice   { shift->{api_choice} }
-
-sub next_id {
-    ++(shift->{id} //= 'AA00000000');
-}
-
-=head2 ua
-
-Accessor for the L<Net::Async::HTTP> instance which will be used for SmartyStreets API requests.
-
-=cut
-
-sub ua {
-    my ($self) = @_;
-    $self->{ua} //= do {
-        $self->add_child(
-            my $ua = Net::Async::HTTP->new(
-                fail_on_error            => 1,
-                decode_content           => 1,
-                pipeline                 => 0,
-                max_connections_per_host => 4,
-                user_agent =>
-                    'Mozilla/4.0 (WebService::Async::SmartyStreets; BINARY@cpan.org; https://metacpan.org/pod/WebService::Async::SmartyStreets)',
-            ));
-        $ua;
-        }
-}
-
 =head2 verify
 
 Makes connection to SmartyStreets API and parses the response into WebService::Async::SmartyStreets::Address.
 
-    my $addr = $ss->verify('https://international-street.api.smartystreets.com/verify', %address_to_check)->get;
-
-Please consider using the "verify" subroutine in L<WebService::Async::SmartyStreets::International> or L<WebService::Async::SmartyStreets::US> instead
+    my $addr = $ss->verify('international', %address_to_check)->get;
 
 Takes the following named parameters:
 
 =over 4
 
-=item * C<uri> - URI address (URL address to be pointed at)
+=item * C<api_choice> - specifies which SmartyStreets API to call (accepts only 'international' and 'us')
 
 =item * C<args> - address parameters in a list of keys and values (See L<WebService::Async::SmartyStreets/verify_international>)
 
@@ -154,8 +100,7 @@ async sub verify {
         international => 'https://international-street.api.smartystreets.com/verify',
         us            => 'https://us-street.api.smartystreets.com/street-address',
     );
-    
-    $api_choice //= 'international';
+    # dies if the $api_choice is not valid
     die "Invalid API choice" unless ($valid_api_choice{$api_choice});
     
     my $uri = URI->new($valid_api_choice{$api_choice});
@@ -174,8 +119,39 @@ async sub verify {
     my $decoded = await get_decoded_data($self, $uri);
 
     $log->tracef('=> %s', $decoded);
+
     return map { WebService::Async::SmartyStreets::Address->new(%$_) } @$decoded;
 }
+
+=head2 Getters
+
+The following subroutine returns the attributes respectively:
+
+Example usage:
+
+    $obj->auth_id;
+
+=over 4
+
+=item * C<auth_id>
+
+=item * C<token>
+
+=item * C<api_choice>
+
+=back
+
+=cut
+
+sub auth_id { shift->{auth_id} }
+sub token   { shift->{token} }
+sub api_choice   { shift->{api_choice} }
+
+=head1 ===== INTERNAL METHODS =====
+
+The following methods should only be used internally
+
+=cut
 
 =head2 get_decoded_data
 
@@ -205,6 +181,58 @@ async sub get_decoded_data {
     my $response = decode_json_utf8($res->decoded_content);
 
     return $response;
+}
+
+=head2 configure
+
+Configures the class with the auth_id and token
+
+Takes the following named parameters:
+
+=over 4
+
+=item * C<auth_id> - auth_id obtained from SmartyStreet
+
+=item * C<token> - token obtained from SmartyStreet
+
+=item * C<api_choice> - specifies which SmartyStreet API to access
+
+=back
+
+=cut
+
+sub configure {
+    my ($self, %args) = @_;
+    for my $k (qw(auth_id token api_choice)) {
+        $self->{$k} = delete $args{$k} if exists $args{$k};
+    }
+    $self->next::method(%args);
+}
+
+sub next_id {
+    ++(shift->{id} //= 'AA00000000');
+}
+
+=head2 ua
+
+Accessor for the L<Net::Async::HTTP> instance which will be used for SmartyStreets API requests.
+
+=cut
+
+sub ua {
+    my ($self) = @_;
+    $self->{ua} //= do {
+        $self->add_child(
+            my $ua = Net::Async::HTTP->new(
+                fail_on_error            => 1,
+                decode_content           => 1,
+                pipeline                 => 0,
+                max_connections_per_host => 4,
+                user_agent =>
+                    'Mozilla/4.0 (WebService::Async::SmartyStreets; BINARY@cpan.org; https://metacpan.org/pod/WebService::Async::SmartyStreets)',
+            ));
+        $ua;
+        }
 }
 
 1;

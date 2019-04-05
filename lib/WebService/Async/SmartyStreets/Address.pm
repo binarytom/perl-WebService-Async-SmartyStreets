@@ -3,17 +3,12 @@ package WebService::Async::SmartyStreets::Address;
 use strict;
 use warnings;
 
-=HEAD
+=head1
 
 WebService::Async::SmartyStreets::Address - object that contains the response from SmartyStreets API 
 
-=head1 VERSION
-
-version 0.001
-
 =head1 SYNOPSIS
 
-    use WebService::Async::SmartyStreets::Address;
     # Mocking a simple response from SmartyStreets API and parses it with WebService::Async::SmartyStreets::Address
     my $response = WebService::Async::SmartyStreets::Address->new(
             metadata => {
@@ -30,7 +25,7 @@ version 0.001
     
 =head1 DESCRIPTION
 
-represents (parses) the return response from SmartyStreets API in an object
+Represents (parses) the return response from SmartyStreets API in an object
 
 =head2 Construction
     
@@ -46,8 +41,6 @@ represents (parses) the return response from SmartyStreets API in an object
             verification_status => "Partial",
             address_precision => "Premise",
         });
-        
-=over 4
 
 =cut
 
@@ -56,87 +49,57 @@ sub new {
     bless \%args, $class
 }
 
-=head2 input_id
+=head2 Getters
 
-Returns the value of the input_id
-
+The following subroutine returns each attributes respectively:
+    
 Example usage:
-
+    
     $obj->input_id;
+
+=over 4
+
+=item * C<input_id>
+
+=item * C<organization>
+
+=item * C<latitude>
+
+=item * C<longitude>
+
+=item * C<geocode_precision>
+
+=item * C<max_geocode_precision>
+
+=item * C<address_format>
+
+=item * C<status>
+
+=item * C<address_precision>
+
+=item * C<max_address_precision>
+
+=back 
 
 =cut
 
 sub input_id { shift->{input_id} }
 
-=head2 organization
-
-Returns the value of the organization
-
-=cut
-
 sub organization { shift->{organization} }
-
-=head2 latitude
-
-Returns the value of the latitude
-
-=cut
 
 sub latitude { shift->{metadata}{latitude} }
 
-=head2 longitude
-
-Returns the value of the longitude
-
-=cut
-
 sub longitude { shift->{metadata}{longitude} }
-
-=head2 geocode_precision
-
-Returns the value of the geocode_precision
-
-=cut
 
 sub geocode_precision { shift->{metadata}{geocode_precision} }
 
-=head2 max_geocode_precision
-
-Returns the value of the max_geocode_precision
-
-=cut
-
 sub max_geocode_precision { shift->{metadata}{max_geocode_precision} }
-
-=head2 address_format
-
-Returns the value of the address_format
-
-=cut
 
 sub address_format { shift->{metadata}{address_format} }
 
-=head2 status
-
-Returns the value of the status
-
-=cut
-
 sub status { lc shift->{analysis}{verification_status} // ''}
 
-=head2 address_precision
-
-Returns the value of the address_precision
-
-=cut
-
 sub address_precision { lc shift->{analysis}{address_precision} // ''}
-
-=head2 max_address_precision
-
-Returns the value of the max_address_precision
-
-=cut
 
 sub max_address_precision { lc shift->{analysis}{max_address_precision} // ''}
 
@@ -191,6 +154,7 @@ Example Usage:
 Takes L<String> which consists of address accuracy ("none", "administrative_area", "locality", "thoroughfare", "premise", "delivery_point")
 
 Returns 0 if the status is lower than 'partial'
+
 Returns 1 or 0
 
 =cut
