@@ -15,7 +15,7 @@ WebService::Async::SmartyStreets - calls the SmartyStreets API and checks for th
     my $ss = WebService::Async::SmartyStreets->new(
         auth_id => #insert auth_id,
         token   => #insert token,
-        api_choice => #international or us,
+        api_choice => #international or us, default as 'international' if its undefined
         );
     IO::Async::Loop->new->add($ss);
 
@@ -141,7 +141,7 @@ Example usage:
 
 =item * C<token>
 
-=item * C<api_choice>
+=item * C<api_choice> - default as 'international' if its undefined
 
 =back
 
@@ -149,7 +149,7 @@ Example usage:
 
 sub auth_id { shift->{auth_id} }
 sub token   { shift->{token} }
-sub api_choice   { shift->{api_choice} }
+sub api_choice   { shift->{api_choice} // 'international' }
 
 =head1 ===== INTERNAL METHODS =====
 
