@@ -95,10 +95,6 @@ For more information about the attributes, click [here](https://smartystreets.co
 
 # Methods
 
-## new
-
-Creates the object. takes in hashrefs
-
 ## status_at_least
 
 Checks if the returned response at least hits a certain level (in terms of score).
@@ -169,21 +165,49 @@ WebService::Async::SmartyStreets;
     $loop->add(
         my $ss = WebService::Async::SmartyStreets->new(
             # International token
-            auth_id => '...'
-            token => '...'
+            auth_id => '...',
+            token => '...',
+            api_choice => '...',
         )
     );
-    (async sub {
+    async sub {
         my $addr = await $ss->verify_international(
             # insert address here
         );
-    })->get;
+    }->get;
     
 # DESCRIPTION
 
 This class calls the SmartyStreets API and parse the response to `WebService::Async::SmartyStreets::Address`
 
 # METHODS
+
+## verify
+
+Makes connection to SmartyStreets API and parses the response into `WebService::Async::SmartyStreets::Address`.
+
+Takes the following named parameters:
+- args - address parameters in hash (See `WebService::Async::SmartyStreets/verify_international`)
+
+args consists of the following parameters:
+
+- country - country _[COMPULSORY]_
+- address1 - address line 1
+- address2 - address line 2
+- organization - name of organization (usually building names)
+- locality - city
+- administrative_area - state
+- postal_code - post code
+- geocode - true or false
+- api\_choice - _[OPTIONAL]_ will overide the api_choice in config
+
+## get_decoded_data
+
+Parses the response give by SmartyStreets 
+
+More information of the resposne can be seen in [SmartyStreets Documentation](https://smartystreets.com/docs/cloud/international-street-api)
+
+Returns an arrayref of hashrefs which the keys corresponds to `WebService::Async::SmartyStreets::Address`
 
 ## configure
 
@@ -197,79 +221,13 @@ Returns auth_id.
 
 Returns token.
 
+## api_choice
+
+Returns api_choice.
+
 ## ua
 
 Accessor for the `Net::Async::HTTP` instance which will be used for SmartyStreets API requests.
-
-
-## verify
-
-Makes connection to SmartyStreets API and parses the response into `WebService::Async::SmartyStreets::Address`.
-
-Takes the following named parameters:
-- uri - URI address (in string)
-- args - address parameters in hash (See `WebService::Async::SmartyStreets/verify_international`)
-
-args consists of the following parameters:
-
-- country - country
-- address1 - address line 1
-- address2 - address line 2
-- organization - name of organization (usually building names)
-- locality - city
-- administrative_area - state
-- postal_code - post code
-- geocode - true or false
-
-## get_decoded_data
-
-Parses the response give by SmartyStreets 
-
-More information of the resposne can be seen in [SmartyStreets Documentation](https://smartystreets.com/docs/cloud/international-street-api)
-
-Returns an arrayref of hashrefs which the keys corresponds to `WebService::Async::SmartyStreets::Address`
-
-## get_uri
-
-Dummy sub designed to be overriden in `WebService::Async::SmartyStreets::International` and `WebService::Async::SmartyStreets::USA`
-
---- 
-
-# NAME
-
-WebService::Async::SmartyStreets::International
-
-# Description
-
-This module is a child of `WebService::Async::SmartyStreets`
-
-## get_uri
-
-Overrides get_uri in `WebService::Async::SmartyStreets`
-Returns URI in string  
-
-## verify
-
-Overrides verify in `WebService::Async::SmartyStreets`
-Gets the input arguments and pass it to the parents
-
-# NAME
-
-WebService::Async::SmartyStreets::USA
-
-# Description
-
-This module is a child of `WebService::Async::SmartyStreets`
-
-## get_uri
-
-Overrides get_uri in `WebService::Async::SmartyStreets`
-Returns URI in string  
-
-## verify
-
-Overrides verify in `WebService::Async::SmartyStreets`
-Gets the input arguments and pass it to the parents
 
 # AUTHOR
 
