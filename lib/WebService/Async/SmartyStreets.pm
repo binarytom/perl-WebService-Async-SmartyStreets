@@ -45,6 +45,7 @@ use URI::QueryParam;
 use Future::AsyncAwait;
 use Net::Async::HTTP;
 use JSON::MaybeUTF8 qw(:v1);
+use Syntax::Keyword::Try;
 
 use WebService::Async::SmartyStreets::Address;
 
@@ -120,6 +121,7 @@ async sub verify {
         'input-id' => $self->next_id,
     );
     $log->tracef('GET %s', '' . $uri);
+
     my $decoded = await get_decoded_data($self, $uri);
 
     $log->tracef('=> %s', $decoded);
@@ -180,11 +182,18 @@ Returns an arrayref of hashrefs which the keys corresponds to L<WebService::Asyn
 async sub get_decoded_data {
     my $self = shift;
     my $uri = shift;
-    
-    my $res = await $self->ua->GET($uri);
+
+    my $res;
+    try {
+        $res = await $self->ua->GET($uri);
+    }
+    catch {
+        die "Unable to retrieve response.";
+    };
+
     my $response = decode_json_utf8($res->decoded_content);
 
-    return $response;
+    return $response->[0];
 }
 
 =head2 configure
