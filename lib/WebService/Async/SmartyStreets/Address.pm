@@ -3,6 +3,8 @@ package WebService::Async::SmartyStreets::Address;
 use strict;
 use warnings;
 
+# VERSION
+
 =head1 NAME
 
 WebService::Async::SmartyStreets::Address - object that contains the response from SmartyStreets API 
@@ -49,57 +51,65 @@ sub new {
     bless \%args, $class
 }
 
-=head2 Getters
+=head2 METHODS - Accessors
 
-The following subroutine returns each attributes respectively:
-
-Example usage:
-
-    $obj->input_id;
-
-=over 4
-
-=item * C<input_id>
-
-=item * C<organization>
-
-=item * C<latitude>
-
-=item * C<longitude>
-
-=item * C<geocode_precision>
-
-=item * C<max_geocode_precision>
-
-=item * C<address_format>
-
-=item * C<status>
-
-=item * C<address_precision>
-
-=item * C<max_address_precision>
-
-=back
+=head2 input_id
 
 =cut
 
 sub input_id { shift->{input_id} }
 
+=head2 organization
+
+=cut
+
 sub organization { shift->{organization} }
+
+=head2 latitude
+
+=cut
 
 sub latitude { shift->{metadata}{latitude} }
 
+=head2 longitude
+
+=cut
+
 sub longitude { shift->{metadata}{longitude} }
+
+=head2 geocode_precision
+
+=cut
 
 sub geocode_precision { shift->{metadata}{geocode_precision} }
 
+=head2 max_geocode_precision
+
+=cut
+
 sub max_geocode_precision { shift->{metadata}{max_geocode_precision} }
+
+=head2 address_format
+
+=cut
 
 sub address_format { shift->{metadata}{address_format} }
 
+=head2 status
+
+=cut
+
 sub status { lc shift->{analysis}{verification_status} // ''}
 
+=head2 address_precision
+
+=cut
+
 sub address_precision { lc shift->{analysis}{address_precision} // ''}
+
+=head2 max_address_precision
+
+=cut
 
 sub max_address_precision { lc shift->{analysis}{max_address_precision} // ''}
 
@@ -141,9 +151,7 @@ my %accuracy_level = (
     delivery_point => 5,
 );
 
-=pod
-
-accuracy_at_least
+=head2 accuracy_at_least
 
 Similar with status at least, checks if the returned response is at least hits a certain accuracy (in terms of score)
 
