@@ -117,7 +117,7 @@ async sub verify {
     return map { WebService::Async::SmartyStreets::Address->new(%$_) } @$decoded;
 }
 
-=head2 Getters
+=head2 METHODS - Accessors
 
 The following subroutine returns the attributes respectively:
 
@@ -139,13 +139,8 @@ Example usage:
 
 sub auth_id { shift->{auth_id} }
 sub token   { shift->{token} }
-sub api_choice   { shift->{api_choice} // 'international' }
 
-=head1 ===== INTERNAL METHODS =====
-
-The following methods should only be used internally
-
-=cut
+=head1 METHODS - Internal
 
 =head2 get_decoded_data
 
@@ -153,17 +148,17 @@ Calls the SmartyStreets API then decode and parses the response give by SmartySt
 
     my $decoded = await get_decoded_data($self, $uri)
 
-Takes the following named parameters:
+Takes the following parameters:
 
 =over 4
 
-=item * C<uri> - URI address that the process will make the call to
+=item * C<$uri> - URI for endpoint
 
 =back 
 
-More information on the response can be seen in L<SmartyStreets Documentation | https://smartystreets.com/docs/cloud/international-street-api>
+More information on the response can be seen in L<SmartyStreets Documentation | https://smartystreets.com/docs/cloud/international-street-api>.
 
-Returns an arrayref of hashrefs which the keys corresponds to L<WebService::Async::SmartyStreets::Address>
+Returns a L<Future> which resolves to an arrayref of L<WebService::Async::SmartyStreets::Address> instances.
 
 =cut
 
