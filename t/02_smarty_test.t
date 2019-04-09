@@ -3,9 +3,8 @@ use warnings;
 use Future;
 use Test::More;
 use Test::MockModule;
-use Test::Fatal qw(dies_ok);
+use Test::Fatal;
 use WebService::Async::SmartyStreets;
-use JSON::MaybeXS qw( encode_json );
 use Future::AsyncAwait;
 
 my $user_agent = Test::MockModule->new('Net::Async::HTTP');
@@ -16,16 +15,12 @@ $user_agent->mock(
 
 my $mock_ss = Test::MockModule->new('WebService::Async::SmartyStreets');
 $mock_ss->mock(
-    auth_id => sub {
+    international_auth_id => sub {
         return 1;
     },
     
-    token => sub {
+    international_token => sub {
         return 1;
-    },
-    
-    api_choice => sub {
-        return 'international';
     },
     
     get_decoded_data => sub{
@@ -49,10 +44,9 @@ $mock_ss->mock(
     
 subtest "Call SmartyStreets" => sub {
     my $ss = WebService::Async::SmartyStreets->new(
-        # this function is mocked, so the values doesnt matter
-        auth_id => '...',
-        token => '...',
-        api_choice => 'international'
+        # this function is mocked, so the values are irrelevant
+        international_auth_id => '...',
+        international_token => '...',
     );
     
     my %data = (
@@ -75,12 +69,6 @@ subtest "Call SmartyStreets" => sub {
     # Check if address accuracy level check is correct
     is ($addr->accuracy_at_least('locality'), 1, "Accuracy checking is correct");
     is ($addr->accuracy_at_least('delivery_point'), '', "Accuracy checking is correct");
-    
-    # It should die as the api_choice is not valid
-    $data{api_choice} = 'test';
-    
-    dies_ok { $ss->verify(%data)->get() } 'Invalid API token test';
-    
 };
 
 done_testing();
