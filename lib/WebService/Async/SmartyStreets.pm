@@ -24,13 +24,9 @@ WebService::Async::SmartyStreets - calls the SmartyStreets API and checks for th
 
 =head1 DESCRIPTION
 
-This module calls the SmartyStreets API and parse the response to L<WebService::Async::SmartyStreets::Address>
+This module calls the SmartyStreets API and parse the response to L<WebService::Async::SmartyStreets::Address>.
 
-Note that this module uses L<Future::AsyncAwait>
-
-=over 4
-
-=back
+Note that this module uses L<Future::AsyncAwait>.
 
 =cut
 
