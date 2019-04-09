@@ -57,7 +57,7 @@ Takes the following named parameters:
 
 =over 4
 
-=item * C<country> - country [THIS FIELD IS COMPULSORY]
+=item * C<country> - country (required)
 
 =item * C<address1> - address line 1
 
@@ -73,37 +73,23 @@ Takes the following named parameters:
 
 =item * C<geocode> - true or false
 
-=item * C<api_choice> - [NOTE] specifies which SmartyStreets API to call (by passing in this parameter, it would overide the one passed in config)
-
 =back
 
-Returns L<WebService::Async::SmartyStreets::Address> object
+Returns a L<Future> which should resolve to a valid L<WebService::Async::SmartyStreets::Address> instance.
 
 =cut
 
 async sub verify {
-
     my ($self, %args) = @_;
     
-    my %valid_api_choice = (
-        international => 'https://international-street.api.smartystreets.com/verify',
-        us            => 'https://us-street.api.smartystreets.com/street-address',
-    );
-
-    # provides the option to switch API token choice by overiding
-    my $ss_api_choice = $args{api_choice} // $self->api_choice;
-
-    # dies if the $api_choice is not valid
-    die "Invalid API choice. Takes in 'international' and 'us' only." unless ($valid_api_choice{$ss_api_choice});
-    
-    my $uri = URI->new($valid_api_choice{$ss_api_choice});
+    my $uri = $self->country_endpoint($args{country})->clone;
 
     $uri->query_param($_ => $args{$_}) for keys %args;
     $uri->query_param(
-        'auth-id' => ($self->auth_id // die 'need an auth ID'),
+        'auth-id' => ($self->auth_id($args{country}) // die 'need an auth ID'),
     );
     $uri->query_param(
-        'auth-token' => ($self->token // die 'need an auth token'),
+        'auth-token' => ($self->token($args{country}) // die 'need an auth token'),
     );
     $uri->query_param(
         'input-id' => $self->next_id,
@@ -181,25 +167,30 @@ async sub get_decoded_data {
 
 =head2 configure
 
-Configures the class with the auth_id and token
+Configures the instance.
 
 Takes the following named parameters:
 
 =over 4
 
-=item * C<auth_id> - auth_id obtained from SmartyStreet
+=item * C<international_auth_id> - auth_id obtained from SmartyStreet
 
-=item * C<token> - token obtained from SmartyStreet
+=item * C<international_token> - token obtained from SmartyStreet
 
-=item * C<api_choice> - specifies which SmartyStreet API to access
+=item * C<us_auth_id> - auth_id obtained from SmartyStreet
+
+=item * C<us_token> - token obtained from SmartyStreet
 
 =back
+
+Note that you can provide US, international or both API tokens - if an API token
+is not available for a L</verify> call, then it will return a failed L<Future>.
 
 =cut
 
 sub configure {
     my ($self, %args) = @_;
-    for my $k (qw(auth_id token api_choice)) {
+    for my $k (qw(international_auth_id international_token us_auth_id us_token)) {
         $self->{$k} = delete $args{$k} if exists $args{$k};
     }
     $self->next::method(%args);
