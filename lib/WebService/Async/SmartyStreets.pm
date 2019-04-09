@@ -13,18 +13,25 @@ WebService::Async::SmartyStreets - calls the SmartyStreets API and checks for th
 =head1 SYNOPSIS
 
     my $ss = WebService::Async::SmartyStreets->new(
-        auth_id => #insert auth_id,
-        token   => #insert token,
-        api_choice => #international or us, default as 'international' if its undefined
-        );
+        # Obtain these from your SmartyStreets account page.
+        # These will be used for US lookups
+        us_auth_id => '...',
+        us_token   => '...',
+        # For non-US address lookups, you would also need an international token
+        international_auth_id => '...',
+        international_token   => '...',
+    );
     IO::Async::Loop->new->add($ss);
 
-    my $addr = $ss->verify(<list of address element>, geocode => 'true')->get;
-    print($addr->status);
+    print $ss->verify(
+        city => 'Atlanta',
+        country => 'US',
+        geocode => 1
+    )->get->status;
 
 =head1 DESCRIPTION
 
-This module calls the SmartyStreets API and parse the response to L<WebService::Async::SmartyStreets::Address>.
+This module provides basic support for the L<SmartyStreets API|https://smartystreets.com/>.
 
 Note that this module uses L<Future::AsyncAwait>.
 
@@ -103,6 +110,10 @@ async sub verify {
     return map { WebService::Async::SmartyStreets::Address->new(%$_) } @$decoded;
 }
 
+=head2 METHODS - Accessors
+
+=cut
+
 sub country_endpoint {
     my ($self, $country) = @_;
     return $self->us_endpoint if uc($country) eq 'US';
@@ -129,12 +140,6 @@ sub token {
     return $self->{international_token};
 }
 
-=head2 METHODS - Accessors
-
-=cut
-
-sub auth_id { shift->{auth_id} }
-sub token   { shift->{token} }
 
 =head1 METHODS - Internal
 
