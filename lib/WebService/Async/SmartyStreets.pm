@@ -57,14 +57,6 @@ Takes the following named parameters:
 
 =over 4
 
-=item * C<args> - address parameters in a list of keys and values (See L<WebService::Async::SmartyStreets/verify_international>)
-
-=back
-
-args consists of the following parameters:
-
-=over 4
-
 =item * C<country> - country [THIS FIELD IS COMPULSORY]
 
 =item * C<address1> - address line 1
