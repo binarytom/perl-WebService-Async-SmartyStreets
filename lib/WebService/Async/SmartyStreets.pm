@@ -103,23 +103,33 @@ async sub verify {
     return map { WebService::Async::SmartyStreets::Address->new(%$_) } @$decoded;
 }
 
+sub country_endpoint {
+    my ($self, $country) = @_;
+    return $self->us_endpoint if uc($country) eq 'US';
+    return $self->international_endpoint;
+}
+
+sub us_endpoint {
+    shift->{us_endpoint} //= URI->new('https://us-street.api.smartystreets.com/street-address');
+}
+
+sub international_endpoint {
+    shift->{international_endpoint} //= URI->new('https://international-street.api.smartystreets.com/verify');
+}
+
+sub auth_id {
+    my ($self, $country) = @_;
+    return $self->{us_auth_id} if uc($country) eq 'US';
+    return $self->{international_auth_id};
+}
+
+sub token {
+    my ($self, $country) = @_;
+    return $self->{us_token} if uc($country) eq 'US';
+    return $self->{international_token};
+}
+
 =head2 METHODS - Accessors
-
-The following subroutine returns the attributes respectively:
-
-Example usage:
-
-    $obj->auth_id;
-
-=over 4
-
-=item * C<auth_id>
-
-=item * C<token>
-
-=item * C<api_choice> - default as 'international' if its undefined
-
-=back
 
 =cut
 
