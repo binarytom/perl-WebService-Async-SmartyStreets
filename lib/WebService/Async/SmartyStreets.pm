@@ -103,7 +103,7 @@ async sub verify {
     );
     $log->tracef('GET %s', '' . $uri);
 
-    my $decoded = await get_decoded_data($self, $uri);
+    my $decoded = await $self->get_decoded_data($uri);
 
     $log->tracef('=> %s', $decoded);
 
@@ -164,20 +164,16 @@ Returns a L<Future> which resolves to an arrayref of L<WebService::Async::Smarty
 =cut
 
 async sub get_decoded_data {
-    my $self = shift;
-    my $uri = shift;
+    my ($self, $uri) = @_;
 
-    my $res;
     try {
-        $res = await $self->ua->GET($uri);
+        my $res = await $self->ua->GET($uri);
+        my $response = decode_json_utf8($res->decoded_content);
+        return $response->[0];
     }
     catch {
-        die "Unable to retrieve response.";
-    };
-
-    my $response = decode_json_utf8($res->decoded_content);
-
-    return $response->[0];
+        die "Unable to retrieve SmartyStreets response for " . $uri;
+    }
 }
 
 =head2 configure
