@@ -1,0 +1,5 @@
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
+
+        Pre-release version. Released as a proof of concept.
